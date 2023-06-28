@@ -1,7 +1,6 @@
 package com.kamilsudarmi.fintrack.transaction
 
 import android.app.DatePickerDialog
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -10,10 +9,8 @@ import android.widget.Spinner
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.kamilsudarmi.fintrack.MainActivity
 import com.kamilsudarmi.fintrack.R
 import com.kamilsudarmi.fintrack.databinding.ActivityAddTransactionBinding
-import com.kamilsudarmi.fintrack.databinding.ActivityMainBinding
 import java.util.Calendar
 
 class AddTransactionActivity : AppCompatActivity() {
@@ -28,6 +25,8 @@ class AddTransactionActivity : AppCompatActivity() {
         binding = ActivityAddTransactionBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+//        val currencyTextWatcher = CurrencyTextWatcher(binding.etAmount)
+//        binding.etAmount.addTextChangedListener(currencyTextWatcher)
 
         // Inisialisasi Firebase Auth dan Database
         firebaseAuth = FirebaseAuth.getInstance()
@@ -85,7 +84,7 @@ class AddTransactionActivity : AppCompatActivity() {
     private fun showDatePicker() {
         val datePickerDialog = DatePickerDialog(
             this,
-            DatePickerDialog.OnDateSetListener { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+            { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
                 // Mengatur tanggal yang dipilih ke TextView tvDate
                 val selectedDate = "$dayOfMonth/${month + 1}/$year"
                 binding.tvDate.text = selectedDate

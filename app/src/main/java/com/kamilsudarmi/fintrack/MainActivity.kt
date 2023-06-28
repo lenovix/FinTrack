@@ -1,8 +1,11 @@
 package com.kamilsudarmi.fintrack
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -11,10 +14,12 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.kamilsudarmi.fintrack.adapter.TransactionAdapter
 import com.kamilsudarmi.fintrack.auth.login.LoginActivity
 import com.kamilsudarmi.fintrack.databinding.ActivityMainBinding
 import com.kamilsudarmi.fintrack.transaction.AddTransactionActivity
 import com.kamilsudarmi.fintrack.transaction.Transaction
+import java.text.DecimalFormat
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -36,6 +41,10 @@ class MainActivity : AppCompatActivity() {
 
         checkLoginStatus()
         button()
+    }
+    fun formatCurrency(amount: Double): String {
+        val decimalFormat = DecimalFormat("#,###")
+        return "Rp. ${decimalFormat.format(amount)}"
     }
 
     override fun onStart() {
@@ -61,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                                 totalIncome += it.amount
                             }
                         }
-                        binding.tvTotalIncome.text = "Total Pemasukan: $totalIncome"
+                        binding.tvTotalIncome.text = formatCurrency(totalIncome)
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -80,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                                 totalExpense += it.amount
                             }
                         }
-                        binding.tvTotalExpense.text = "Total Pengeluaran: $totalExpense"
+                        binding.tvTotalExpense.text = formatCurrency(totalExpense)
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -102,13 +111,41 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    binding.tvTotalMoney.text = "Total Uang Pengguna: $totalMoney"
+                    binding.tvTotalMoney.text = formatCurrency(totalMoney)
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
                     // Handle error
                 }
             })
+
+            val recyclerView: RecyclerView = findViewById(R.id.recycler_view_transactions)
+            recyclerView.setHasFixedSize(true)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+
+            val transactionList = ArrayList<Transaction>()
+            val transactionAdapter = TransactionAdapter(transactionList)
+            recyclerView.adapter = transactionAdapter
+
+            userTransactionRef.addValueEventListener(object : ValueEventListener {
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    transactionList.clear()
+
+                    for (transactionSnapshot in snapshot.children) {
+                        val transaction = transactionSnapshot.getValue(Transaction::class.java)
+                        transaction?.let {
+                            transactionList.add(it)
+                        }
+                    }
+                    transactionAdapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // Menangani kegagalan saat membaca data dari Firebase
+                }
+            })
+
         }
     }
 

@@ -15,6 +15,9 @@
         android:theme="@style/Theme.FinTrack"
         tools:targetApi="31">
         <activity
+            android:name=".transaction.DetailTransactionActivity"
+            android:exported="false" />
+        <activity
             android:name=".transaction.AddTransactionActivity"
             android:exported="false" />
         <activity
@@ -22,7 +25,7 @@
             android:exported="false" />
         <activity
             android:name=".auth.login.LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
