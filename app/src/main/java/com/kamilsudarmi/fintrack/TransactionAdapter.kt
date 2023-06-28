@@ -6,13 +6,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kamilsudarmi.fintrack.transaction.Transaction
+import java.text.NumberFormat
+import java.util.Locale
 
 class TransactionAdapter(private val transactionList: List<Transaction>) :
     RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
     inner class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvAmount: TextView = itemView.findViewById(R.id.tv_amount)
-        val tvCategory: TextView = itemView.findViewById(R.id.tv_category)
+//        val tvCategory: TextView = itemView.findViewById(R.id.tv_category)
         val tvDate: TextView = itemView.findViewById(R.id.tv_date)
         val tvDescription: TextView = itemView.findViewById(R.id.tv_description)
     }
@@ -25,14 +27,19 @@ class TransactionAdapter(private val transactionList: List<Transaction>) :
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val currentTransaction = transactionList[position]
-        holder.tvAmount.text = currentTransaction.amount.toString()
-        holder.tvCategory.text = currentTransaction.category
+        holder.tvAmount.text = formatCurrency(currentTransaction.amount)
+//        holder.tvCategory.text = currentTransaction.category
         holder.tvDate.text = currentTransaction.date
         holder.tvDescription.text = currentTransaction.description
     }
 
     override fun getItemCount(): Int {
         return transactionList.size
+    }
+
+    fun formatCurrency(amount: Double): String {
+        val numberFormat = NumberFormat.getCurrencyInstance(Locale("id", "ID")) // Atur sesuai kebutuhan lokal Anda
+        return numberFormat.format(amount)
     }
 }
 

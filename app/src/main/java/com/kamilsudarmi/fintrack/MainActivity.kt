@@ -17,6 +17,8 @@ import com.kamilsudarmi.fintrack.auth.login.LoginActivity
 import com.kamilsudarmi.fintrack.databinding.ActivityMainBinding
 import com.kamilsudarmi.fintrack.transaction.AddTransactionActivity
 import com.kamilsudarmi.fintrack.transaction.Transaction
+import java.text.NumberFormat
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -38,6 +40,10 @@ class MainActivity : AppCompatActivity() {
 
         checkLoginStatus()
         button()
+    }
+    fun formatCurrency(amount: Double): String {
+        val numberFormat = NumberFormat.getCurrencyInstance(Locale("id", "ID")) // Atur sesuai kebutuhan lokal Anda
+        return numberFormat.format(amount)
     }
 
     override fun onStart() {
@@ -63,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                                 totalIncome += it.amount
                             }
                         }
-                        binding.tvTotalIncome.text = "Total Pemasukan: $totalIncome"
+                        binding.tvTotalIncome.text = formatCurrency(totalIncome)
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -82,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                                 totalExpense += it.amount
                             }
                         }
-                        binding.tvTotalExpense.text = "Total Pengeluaran: $totalExpense"
+                        binding.tvTotalExpense.text = formatCurrency(totalExpense)
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -104,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    binding.tvTotalMoney.text = "Total Uang Pengguna: $totalMoney"
+                    binding.tvTotalMoney.text = formatCurrency(totalMoney)
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
