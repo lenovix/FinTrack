@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.google.firebase.FirebaseApp
 import com.kamilsudarmi.fintrack.auth.login.LoginActivity
 import com.kamilsudarmi.fintrack.databinding.ActivityMainBinding
+import com.kamilsudarmi.fintrack.transaction.AddTransactionActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -34,6 +35,10 @@ class MainActivity : AppCompatActivity() {
     private fun button() {
         binding.btnLogout.setOnClickListener {
             logout()
+        }
+        binding.fabAdd.setOnClickListener {
+            val intent = Intent(this, AddTransactionActivity::class.java)
+            startActivity(intent)
         }
     }
 
