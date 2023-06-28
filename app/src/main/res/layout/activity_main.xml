@@ -38,12 +38,20 @@
             android:textSize="18sp"
             android:padding="8dp" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_transactions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="16dp" />
+
         <Button
             android:id="@+id/btn_logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Logout" />
+
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

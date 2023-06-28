@@ -3,6 +3,8 @@ package com.kamilsudarmi.fintrack
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -109,6 +111,33 @@ class MainActivity : AppCompatActivity() {
                     // Handle error
                 }
             })
+
+            val recyclerView: RecyclerView = findViewById(R.id.recycler_view_transactions)
+            recyclerView.setHasFixedSize(true)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+
+            val transactionList = ArrayList<Transaction>()
+            val transactionAdapter = TransactionAdapter(transactionList)
+            recyclerView.adapter = transactionAdapter
+
+            userTransactionRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    transactionList.clear()
+
+                    for (transactionSnapshot in snapshot.children) {
+                        val transaction = transactionSnapshot.getValue(Transaction::class.java)
+                        transaction?.let {
+                            transactionList.add(it)
+                        }
+                    }
+                    transactionAdapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // Menangani kegagalan saat membaca data dari Firebase
+                }
+            })
+
         }
     }
 
