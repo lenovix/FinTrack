@@ -4,22 +4,112 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.kamilsudarmi.fintrack.auth.login.LoginActivity
 import com.kamilsudarmi.fintrack.databinding.ActivityMainBinding
 import com.kamilsudarmi.fintrack.transaction.AddTransactionActivity
+import com.kamilsudarmi.fintrack.transaction.Transaction
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseDatabase: FirebaseDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
         FirebaseApp.initializeApp(this)
 
+        // Inisialisasi Firebase Auth dan Database
+        firebaseAuth = FirebaseAuth.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance()
+
         checkLoginStatus()
         button()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Mengecek apakah pengguna sudah login
+        val currentUser: FirebaseUser? = firebaseAuth.currentUser
+        if (currentUser != null) {
+            // Mendapatkan ID pengguna saat ini
+            val userId = currentUser.uid
+
+            // Mendapatkan referensi database untuk data transaksi pengguna
+            val userTransactionRef: DatabaseReference =
+                firebaseDatabase.reference.child("transactions").child(userId)
+
+            // Mendapatkan total pemasukan
+            userTransactionRef.orderByChild("transactionType").equalTo("Pemasukan")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        var totalIncome = 0.0
+                        for (transactionSnapshot in dataSnapshot.children) {
+                            val transaction = transactionSnapshot.getValue(Transaction::class.java)
+                            transaction?.let {
+                                totalIncome += it.amount
+                            }
+                        }
+                        binding.tvTotalIncome.text = "Total Pemasukan: $totalIncome"
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Handle error
+                    }
+                })
+
+            // Mendapatkan total pengeluaran
+            userTransactionRef.orderByChild("transactionType").equalTo("Pengeluaran")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        var totalExpense = 0.0
+                        for (transactionSnapshot in dataSnapshot.children) {
+                            val transaction = transactionSnapshot.getValue(Transaction::class.java)
+                            transaction?.let {
+                                totalExpense += it.amount
+                            }
+                        }
+                        binding.tvTotalExpense.text = "Total Pengeluaran: $totalExpense"
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Handle error
+                    }
+                })
+
+            // Mendapatkan total uang pengguna
+            userTransactionRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    var totalMoney = 0.0
+                    for (transactionSnapshot in dataSnapshot.children) {
+                        val transaction = transactionSnapshot.getValue(Transaction::class.java)
+                        transaction?.let {
+                            if (it.transactionType == "Pemasukan") {
+                                totalMoney += it.amount
+                            } else {
+                                totalMoney -= it.amount
+                            }
+                        }
+                    }
+                    binding.tvTotalMoney.text = "Total Uang Pengguna: $totalMoney"
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Handle error
+                }
+            })
+        }
     }
 
     private fun checkLoginStatus() {
