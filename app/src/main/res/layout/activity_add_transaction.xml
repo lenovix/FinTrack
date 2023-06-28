@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".transaction.AddTransactionActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="19sp"
+            android:text="Add Transaction"/>
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <EditText
+            android:id="@+id/et_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Amount"
+            android:inputType="numberDecimal"
+            android:padding="8dp"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginBottom="16dp" />
+
+        <RadioGroup
+            android:id="@+id/radio_group_transaction_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_expense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pengeluaran"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/radio_income"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pemasukan" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/tv_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
+        <Spinner
+            android:id="@+id/sp_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_amount"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/et_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
+        <Button
+            android:id="@+id/btn_pick_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pick Date"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tv_payment_method"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Payment Method"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
+        <Spinner
+            android:id="@+id/sp_payment_method"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_pick_date"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btn_add_transaction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sp_payment_method"
+            android:text="Add Transaction" />
+    </LinearLayout>
+</LinearLayout>
