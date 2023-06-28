@@ -1,5 +1,6 @@
 package com.kamilsudarmi.fintrack
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,12 +14,12 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.kamilsudarmi.fintrack.adapter.TransactionAdapter
 import com.kamilsudarmi.fintrack.auth.login.LoginActivity
 import com.kamilsudarmi.fintrack.databinding.ActivityMainBinding
 import com.kamilsudarmi.fintrack.transaction.AddTransactionActivity
 import com.kamilsudarmi.fintrack.transaction.Transaction
-import java.text.NumberFormat
-import java.util.Locale
+import java.text.DecimalFormat
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -42,8 +43,8 @@ class MainActivity : AppCompatActivity() {
         button()
     }
     fun formatCurrency(amount: Double): String {
-        val numberFormat = NumberFormat.getCurrencyInstance(Locale("id", "ID")) // Atur sesuai kebutuhan lokal Anda
-        return numberFormat.format(amount)
+        val decimalFormat = DecimalFormat("#,###")
+        return "Rp. ${decimalFormat.format(amount)}"
     }
 
     override fun onStart() {
@@ -127,6 +128,7 @@ class MainActivity : AppCompatActivity() {
             recyclerView.adapter = transactionAdapter
 
             userTransactionRef.addValueEventListener(object : ValueEventListener {
+                @SuppressLint("NotifyDataSetChanged")
                 override fun onDataChange(snapshot: DataSnapshot) {
                     transactionList.clear()
 

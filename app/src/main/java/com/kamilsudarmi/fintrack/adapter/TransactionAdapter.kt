@@ -1,13 +1,14 @@
-package com.kamilsudarmi.fintrack
+package com.kamilsudarmi.fintrack.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.kamilsudarmi.fintrack.R
 import com.kamilsudarmi.fintrack.transaction.Transaction
-import java.text.NumberFormat
-import java.util.Locale
+import java.text.DecimalFormat
 
 class TransactionAdapter(private val transactionList: List<Transaction>) :
     RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
@@ -31,15 +32,26 @@ class TransactionAdapter(private val transactionList: List<Transaction>) :
 //        holder.tvCategory.text = currentTransaction.category
         holder.tvDate.text = currentTransaction.date
         holder.tvDescription.text = currentTransaction.description
+
+        // Mengecek tipe transaksi dan mengatur warna teks sesuai
+        if (currentTransaction.transactionType == "Pengeluaran") {
+            holder.tvAmount.setTextColor(ContextCompat.getColor(holder.itemView.context,
+                R.color.red
+            ))
+        } else {
+            holder.tvAmount.setTextColor(ContextCompat.getColor(holder.itemView.context,
+                R.color.green
+            ))
+        }
     }
 
     override fun getItemCount(): Int {
         return transactionList.size
     }
 
-    fun formatCurrency(amount: Double): String {
-        val numberFormat = NumberFormat.getCurrencyInstance(Locale("id", "ID")) // Atur sesuai kebutuhan lokal Anda
-        return numberFormat.format(amount)
+    private fun formatCurrency(amount: Double): String {
+        val decimalFormat = DecimalFormat("#,###")
+        return "Rp. ${decimalFormat.format(amount)}"
     }
 }
 

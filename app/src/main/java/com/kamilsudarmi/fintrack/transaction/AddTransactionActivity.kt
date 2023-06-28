@@ -84,7 +84,7 @@ class AddTransactionActivity : AppCompatActivity() {
     private fun showDatePicker() {
         val datePickerDialog = DatePickerDialog(
             this,
-            DatePickerDialog.OnDateSetListener { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+            { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
                 // Mengatur tanggal yang dipilih ke TextView tvDate
                 val selectedDate = "$dayOfMonth/${month + 1}/$year"
                 binding.tvDate.text = selectedDate
