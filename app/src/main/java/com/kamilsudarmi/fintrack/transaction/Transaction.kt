@@ -1,6 +1,7 @@
 package com.kamilsudarmi.fintrack.transaction
 
 data class Transaction(
+    val transactionId: String,
     val amount: Double,
     val category: String,
     val description: String,
@@ -8,5 +9,5 @@ data class Transaction(
     val paymentMethod: String,
     val transactionType: String
 ) {
-    constructor() : this(0.0, "", "", "", "","")
+    constructor() : this("",0.0, "", "", "", "","")
 }

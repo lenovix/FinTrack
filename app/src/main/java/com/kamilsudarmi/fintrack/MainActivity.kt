@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.FirebaseApp
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         checkLoginStatus()
         button()
     }
+
     fun formatCurrency(amount: Double): String {
         val decimalFormat = DecimalFormat("#,###")
         return "Rp. ${decimalFormat.format(amount)}"

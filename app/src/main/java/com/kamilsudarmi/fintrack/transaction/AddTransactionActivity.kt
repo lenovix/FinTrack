@@ -8,6 +8,7 @@ import android.widget.DatePicker
 import android.widget.Spinner
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.kamilsudarmi.fintrack.R
 import com.kamilsudarmi.fintrack.databinding.ActivityAddTransactionBinding
@@ -18,6 +19,8 @@ class AddTransactionActivity : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firebaseDatabase: FirebaseDatabase
+
+    private lateinit var databaseReference: DatabaseReference
 
     private val calendar: Calendar = Calendar.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +34,7 @@ class AddTransactionActivity : AppCompatActivity() {
         // Inisialisasi Firebase Auth dan Database
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
+        databaseReference = FirebaseDatabase.getInstance().reference
 
         button()
         spinnerCategory()
@@ -116,8 +120,9 @@ class AddTransactionActivity : AppCompatActivity() {
             // Membuat referensi database untuk data transaksi pengguna
             val userTransactionRef = firebaseDatabase.reference.child("transactions").child(userId)
 
+            val transactionId = databaseReference.child("transactions").child(userId).push().key
             // Membuat objek Transaction
-            val transaction = Transaction(amount, category, description, date, paymentMethod, transactionType)
+            val transaction = transactionId?.let { Transaction(it, amount, category, description, date, paymentMethod, transactionType) }
 
             // Menyimpan data transaksi ke Firebase Database
             val transactionRef = userTransactionRef.push()
